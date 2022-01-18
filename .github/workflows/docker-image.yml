@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        tag=$(date +%s)
+        docker build . --file Dockerfile --tag troycornwall/moe-postgres:latest
+        docker tag troycornwall/moe-postgres:latest troycornwall/moe-postgres:$(tag)
+        docker push troycornwall/moe-postgres:latest troycornwall/moe-postgres:$(tag)
